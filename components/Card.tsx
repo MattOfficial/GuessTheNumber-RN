@@ -2,7 +2,9 @@ import React, { CSSProperties } from "react";
 import { View, StyleSheet, StyleProp } from "react-native";
 
 const Card = (props: { children?: JSX.Element[]; style?: any }) => {
-  return <View style={{...styles.card, ...props.style}}>{props.children}</View>;
+  return (
+    <View style={{ ...styles.card, ...props.style }}>{props.children}</View>
+  );
 };
 
 const styles = StyleSheet.create({
