@@ -8,6 +8,8 @@ const Input = (props: {
   autoCorrect?: any;
   keyboardType?: any;
   maxLength?: any;
+  onChangeText?: any;
+  value?: string;
 }) => {
   return <TextInput {...props} style={{ ...styles.input, ...props.style }} />;
 };
