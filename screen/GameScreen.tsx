@@ -6,6 +6,7 @@ import Card from '../components/Card';
 
 export interface IGameScreenProps {
     userChoise: number;
+    onGameOver: Function;
 }
 
 enum Choice {
@@ -24,14 +25,22 @@ const generateRandomNumber = function (min: number, max: number, exclude: number
     }
 }
 
-const GameScreen = (props: IGameScreenProps) => {
+const GameScreen = ({ userChoise, onGameOver }: IGameScreenProps) => {
 
-    const [curGuess, setCurGuess] = useState(generateRandomNumber(1, 100, props.userChoise));
+    const [curGuess, setCurGuess] = useState(generateRandomNumber(1, 100, userChoise));
+    const [rounds, setRounds] = useState(0);
+
     const curLow = useRef(1);
     const curHigh = useRef(100);
 
+    useEffect(() => {
+        if (curGuess === userChoise) {
+            onGameOver(rounds);
+        }
+    }, [curGuess, userChoise, onGameOver]);
+
     const nextGuessHandler = (dir: Choice) => {
-        if (dir === Choice.LOWER && curGuess < props.userChoise || dir === Choice.HIGHER && curGuess > props.userChoise) {
+        if (dir === Choice.LOWER && curGuess < userChoise || dir === Choice.HIGHER && curGuess > userChoise) {
             Alert.alert('Don\'t lie!', 'This is misleading and you know it.', [{ text: 'Sorry', style: 'cancel' }]);
             return;
         }
@@ -39,9 +48,10 @@ const GameScreen = (props: IGameScreenProps) => {
             curHigh.current = curGuess;
         }
         if (dir === Choice.HIGHER) {
-            curLow.current = curGuess;
+            curLow.current = curGuess + 1;
         }
         setCurGuess(generateRandomNumber(curLow.current, curHigh.current, curGuess));
+        setRounds(rounds => rounds + 1);
     }
 
     return (
