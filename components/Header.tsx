@@ -1,11 +1,12 @@
 import React from "react";
 import { View, Text, StyleSheet, ProgressViewIOSComponent } from "react-native";
 import Colors from "../constants/Colors";
+import TitleText from './TitleText';
 
 const Header = (props: { title: string }) => {
   return (
     <View style={styles.header}>
-      <Text style={styles.headerText}>{props.title}</Text>
+      <TitleText style={styles.headerText}>{props.title}</TitleText>
     </View>
   );
 };
@@ -22,6 +23,7 @@ const styles = StyleSheet.create({
   headerText: {
     color: "black",
     fontSize: 18,
+    fontFamily: "open_sans_bold",
   },
 });
 
