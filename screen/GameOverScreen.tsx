@@ -1,5 +1,5 @@
 import React from "react";
-import { View, Text, StyleSheet, Button } from "react-native";
+import { View, Text, StyleSheet, Button, Image } from "react-native";
 import Card from "../components/Card";
 import TitleText from "../components/TitleText";
 import BodyText from "../components/BodyText";
@@ -18,6 +18,7 @@ export default function GameOverScreen({
   return (
     <View style={styles.screen}>
       <Card style={styles.card}>
+        <Image style={styles.image} source={require("../assets/success.png")} />
         <TitleText>Game Over!</TitleText>
         <BodyText>Total no. of guesses: {guessNumber}</BodyText>
         <BodyText>The number was: {userNumber}</BodyText>
@@ -38,5 +39,9 @@ const styles = StyleSheet.create({
     maxWidth: "80%",
     justifyContent: "center",
     alignItems: "center",
+  },
+  image: {
+    width: "95%",
+    height: 300,
   },
 });
