@@ -5,7 +5,7 @@ import Colors from "../constants/Colors";
 export interface IMainButtonProps {
   children: any;
   onPress: Function;
-  style?: StyleSheet; 
+  style?: any; 
 }
 
 export default function MainButton(props: IMainButtonProps) {
