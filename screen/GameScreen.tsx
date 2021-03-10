@@ -1,10 +1,13 @@
 import React, { useState, useRef, useEffect } from "react";
 import { Text, View, StyleSheet, Button, Alert } from "react-native";
+import { Ionicons } from "@expo/vector-icons";
 
 import NumberContainer from "../components/NumberContainer";
 import Card from "../components/Card";
+import MainButton from "../components/MainButton";
 
 import BodyText from "../components/BodyText";
+import Colors from '../constants/Colors'
 
 export interface IGameScreenProps {
   userChoise: number;
@@ -73,14 +76,12 @@ const GameScreen = ({ userChoise, onGameOver }: IGameScreenProps) => {
       <BodyText>Opponent's guess: </BodyText>
       <NumberContainer>{curGuess}</NumberContainer>
       <Card style={styles.buttonContainer}>
-        <Button
-          title="Lower"
-          onPress={nextGuessHandler.bind(this, Choice.LOWER)}
-        />
-        <Button
-          title="Higher"
-          onPress={nextGuessHandler.bind(this, Choice.HIGHER)}
-        />
+        <MainButton style={styles.LowerBtn} onPress={nextGuessHandler.bind(this, Choice.LOWER)}>
+          <Ionicons name="md-remove" color="white" size={24} />
+        </MainButton>
+        <MainButton onPress={nextGuessHandler.bind(this, Choice.HIGHER)}>
+          <Ionicons name="md-add" color="white" size={24} />
+        </MainButton>
       </Card>
     </View>
   );
@@ -99,6 +100,9 @@ const styles = StyleSheet.create({
     width: 300,
     maxWidth: "80%",
   },
+  LowerBtn: {
+      backgroundColor: Colors.accent,
+  }
 });
 
 export default GameScreen;
