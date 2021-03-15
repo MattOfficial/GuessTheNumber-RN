@@ -1,6 +1,6 @@
 // Import predefined Components
 import React, { useState } from "react";
-import { StyleSheet, View } from "react-native";
+import { SafeAreaView, StyleSheet, View } from "react-native";
 import * as Font from "expo-font";
 import AppLoading from "expo-app-loading";
 
@@ -63,10 +63,10 @@ export default function App() {
   }
 
   return (
-    <View style={styles.screenView}>
+    <SafeAreaView style={styles.screenView}>
       <Header title="Guess a number:" />
       {content}
-    </View>
+    </SafeAreaView>
   );
 }
 

@@ -1,11 +1,19 @@
 import React from "react";
-import { View, Text, StyleSheet, ProgressViewIOSComponent } from "react-native";
+import { View, Text, StyleSheet, Platform } from "react-native";
 import Colors from "../constants/Colors";
-import TitleText from './TitleText';
+import TitleText from "./TitleText";
 
 const Header = (props: { title: string }) => {
   return (
-    <View style={styles.header}>
+    <View
+      style={{
+        ...styles.header,
+        ...Platform.select({
+          ios: styles.headerIOS,
+          android: styles.headerAndroid,
+        }),
+      }}
+    >
       <TitleText style={styles.headerText}>{props.title}</TitleText>
     </View>
   );
@@ -16,12 +24,21 @@ const styles = StyleSheet.create({
     width: "100%",
     height: 90,
     paddingTop: 36,
-    backgroundColor: Colors.primary,
     alignItems: "center",
     justifyContent: "center",
   },
+  headerIOS: {
+    backgroundColor: "white",
+    borderBottomColor: "#ccc",
+    borderBottomWidth: 1,
+  },
+  headerAndroid: {
+    backgroundColor: Colors.primary,
+    borderBottomColor: "transparent",
+    borderBottomWidth: 0,
+  },
   headerText: {
-    color: "black",
+    color: Platform.OS === "android" ? "white" : Colors.primary,
     fontSize: 18,
     fontFamily: "open_sans_bold",
   },

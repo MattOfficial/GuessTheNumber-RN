@@ -1,16 +1,11 @@
 import React, { useState, useRef, useEffect } from "react";
-import {
-  Text,
-  View,
-  StyleSheet,
-  Button,
-  Alert,
-  ScrollView,
-} from "react-native";
+import { View, StyleSheet, Dimensions, Alert, ScrollView } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
 
 import NumberContainer from "../components/NumberContainer";
 import Card from "../components/Card";
+// The editor might lose its head over not finding the perfect component, but nothing to worry about.
+// RN will automatically handle this in the background.
 import MainButton from "../components/MainButton";
 
 import BodyText from "../components/BodyText";
@@ -54,9 +49,28 @@ const GameScreen = ({ userChoise, onGameOver }: IGameScreenProps) => {
   const [curGuess, setCurGuess] = useState(initGuess);
   const [rounds, setRounds] = useState(0);
   const [pastGuesses, setPastGuess] = useState<number[]>([initGuess]);
+  const [availableDeviceWidth, setAvailableDeviceWidth] = useState(
+    Dimensions.get("window").width
+  );
+  const [availableDeviceHeight, setAvailableDeviceHeight] = useState(
+    Dimensions.get("window").height
+  );
 
   const curLow = useRef(1);
   const curHigh = useRef(100);
+
+  useEffect(() => {
+    const updateLayout = () => {
+      setAvailableDeviceWidth(Dimensions.get("window").width);
+      setAvailableDeviceHeight(Dimensions.get("window").height);
+    };
+
+    Dimensions.addEventListener("change", updateLayout);
+
+    return () => {
+      Dimensions.removeEventListener("change", updateLayout);
+    };
+  });
 
   useEffect(() => {
     if (curGuess === userChoise) {
@@ -90,6 +104,40 @@ const GameScreen = ({ userChoise, onGameOver }: IGameScreenProps) => {
     setPastGuess((curPastGuess) => [nextGuess, ...curPastGuess]);
   };
 
+  let listContainerStyle = styles.listContainer;
+
+  if (availableDeviceWidth < 350) {
+    listContainerStyle = styles.listContainerBig;
+  }
+
+  if (Dimensions.get("window").height < 500) {
+    return (
+      <View style={styles.screen}>
+        <BodyText>Opponent's guess: </BodyText>
+        <View style={styles.landscapeView}>
+          <MainButton
+            style={styles.LowerBtn}
+            onPress={nextGuessHandler.bind(this, Choice.LOWER)}
+          >
+            <Ionicons name="md-remove" color="white" size={24} />
+          </MainButton>
+          <NumberContainer>{curGuess}</NumberContainer>
+
+          <MainButton onPress={nextGuessHandler.bind(this, Choice.HIGHER)}>
+            <Ionicons name="md-add" color="white" size={24} />
+          </MainButton>
+        </View>
+        <View style={listContainerStyle}>
+          <ScrollView contentContainerStyle={styles.listContent}>
+            {pastGuesses.map((guess, index) =>
+              renderListItem(guess, pastGuesses.length - index)
+            )}
+          </ScrollView>
+        </View>
+      </View>
+    );
+  }
+
   return (
     <View style={styles.screen}>
       <BodyText>Opponent's guess: </BodyText>
@@ -105,9 +153,11 @@ const GameScreen = ({ userChoise, onGameOver }: IGameScreenProps) => {
           <Ionicons name="md-add" color="white" size={24} />
         </MainButton>
       </Card>
-      <View style={styles.list}>
+      <View style={listContainerStyle}>
         <ScrollView contentContainerStyle={styles.listContent}>
-          {pastGuesses.map((guess, index) => renderListItem(guess, pastGuesses.length - index))}
+          {pastGuesses.map((guess, index) =>
+            renderListItem(guess, pastGuesses.length - index)
+          )}
         </ScrollView>
       </View>
     </View>
@@ -123,7 +173,7 @@ const styles = StyleSheet.create({
   buttonContainer: {
     flexDirection: "row",
     justifyContent: "space-around",
-    marginTop: 20,
+    marginTop: Dimensions.get("window").height > 600 ? 20 : 10,
     width: 300,
     maxWidth: "80%",
   },
@@ -131,9 +181,9 @@ const styles = StyleSheet.create({
     backgroundColor: Colors.accent,
   },
   listContent: {
-      flexGrow: 1,
-      alignItems: 'center',
-      justifyContent: 'flex-end',
+    flexGrow: 1,
+    alignItems: "center",
+    justifyContent: "flex-end",
   },
   listItem: {
     borderColor: "#ccc",
@@ -143,11 +193,25 @@ const styles = StyleSheet.create({
     backgroundColor: "white",
     justifyContent: "space-around",
     flexDirection: "row",
-    width: '60%',
+    width: Dimensions.get("window").width > 500 ? "60%" : "95%",
   },
   list: {
-      flex: 1,
+    flex: 1,
     width: "80%",
+  },
+  listContainer: {
+    flex: 1,
+    width: "60%",
+  },
+  listContainerBig: {
+    flex: 1,
+    width: "80%",
+  },
+  landscapeView: {
+    flexDirection: "row",
+    justifyContent: "space-around",
+    width: "80%",
+    alignItems: "center",
   },
 });
 
